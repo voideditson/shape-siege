@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shape Siege: Survival</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div id="vignette"></div>
+  <div id="hurt"></div>
+
+  <!-- Menu -->
+  <div class="overlay" id="menu">
+    <div class="panel">
+      <h1>SHAPE SIEGE</h1>
+      <p class="tagline">Survive the waves. Revive your squad. Beat the bosses.</p>
+      <input type="text" id="username" placeholder="Your name" maxlength="10" autocomplete="off">
+      <div class="row">
+        <input type="text" id="roomCode" placeholder="Room code" maxlength="8" autocomplete="off" style="text-transform:uppercase">
+        <button class="btn" id="joinBtn">JOIN</button>
+      </div>
+      <div class="error" id="menuError"></div>
+      <div class="controls">
+        <span><b>WASD</b> move</span><span><b>Mouse</b> aim + shoot</span><span><b>Shift</b> sprint</span>
+        <span><b>E</b> hold to revive</span><span><b>1 2 3</b> pick card</span><span><b>Q</b> quality</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lobby -->
+  <div class="overlay hidden" id="lobby">
+    <div class="panel">
+      <h1>LOBBY <span id="displayRoom" class="accent"></span></h1>
+      <div id="lobbyPlayers"></div>
+      <p class="muted" id="lobbyWait">Waiting for the host to start...</p>
+      <button class="btn hidden" id="startBtn">START SIEGE</button>
+    </div>
+  </div>
+
+  <!-- Upgrade cards -->
+  <div class="overlay hidden" id="cardOverlay">
+    <div class="center">
+      <h1 id="upgradeTitle" class="accent">CHOOSE AN UPGRADE</h1>
+      <div class="cards" id="cardsBox"></div>
+      <p class="muted hidden" id="cardWait">Waiting for the rest of the squad...</p>
+    </div>
+  </div>
+
+  <!-- Game over -->
+  <div class="overlay hidden" id="gameOver">
+    <div class="panel wide">
+      <h1 class="danger">SQUAD ELIMINATED</h1>
+      <p class="big">Reached wave <span id="finalWave" class="accent"></span> <span class="muted" id="bestWave"></span></p>
+      <table id="statsTable"></table>
+      <button class="btn hidden" id="playAgainBtn">PLAY AGAIN</button>
+      <p class="muted hidden" id="goWait">Waiting for the host to restart...</p>
+    </div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <div id="team"></div>
+
+    <div id="topCenter">
+      <div id="waveBox">
+        <div class="wave-num">WAVE <span id="waveNum">1</span></div>
+        <div class="wave-sub"><span id="enemyCount">0</span> left</div>
+      </div>
+      <div id="bossBar" class="hidden">
+        <div class="boss-head"><span id="bossName"></span><span id="bossPhase"></span></div>
+        <div class="boss-track">
+          <i class="boss-trail" id="bossTrail"></i>
+          <i class="boss-fill" id="bossFill"></i>
+          <b class="tick" style="left:33.3%"></b><b class="tick" style="left:66.6%"></b>
+        </div>
+      </div>
+    </div>
+
+    <div id="topRight">
+      <canvas id="minimap" width="160" height="160"></canvas>
+      <div class="kills"><span id="killCount">0</span> kills</div>
+    </div>
+
+    <div id="self">
+      <div class="self-row">
+        <span class="lbl">HP</span>
+        <div class="bar hp"><i id="selfHp"></i></div>
+        <span class="val" id="selfHpText">100</span>
+      </div>
+      <div class="self-row">
+        <span class="lbl">SPR</span>
+        <div class="bar sp"><i id="selfSp"></i></div>
+      </div>
+      <div id="chips"></div>
+    </div>
+
+    <div id="prompt" class="hidden"></div>
+    <div id="banner"><div class="b-main" id="bannerMain"></div><div class="b-sub" id="bannerSub"></div></div>
+
+    <div class="spectate hidden" id="spectateUI">
+      <button class="spec-btn" id="specPrev">&#9664;</button>
+      <div class="spec-name" id="specName">Spectating</div>
+      <button class="spec-btn" id="specNext">&#9654;</button>
+    </div>
+
+    <div id="perf"></div>
+  </div>
+
+  <script src="game.js"></script>
+  <script src="render.js"></script>
+</body>
+</html>
